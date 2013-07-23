@@ -1,9 +1,9 @@
 require 'formula'
 
 class Pig < Formula
-  url 'http://www.apache.org/dyn/closer.cgi?path=pig/pig-0.9.1/pig-0.9.1.tar.gz'
   homepage 'http://pig.apache.org/'
-  md5 'f9aef698536b67b2966e48d328caf071'
+  url 'http://www.apache.org/dyn/closer.cgi?path=pig/pig-0.11.1/pig-0.11.1.tar.gz'
+  sha1 '1351b497b0628504b10533fe5c6451df14eee189'
 
   def patches
     DATA
@@ -11,8 +11,13 @@ class Pig < Formula
 
   def install
     bin.install 'bin/pig'
-    prefix.install "pig-#{version}.jar"
-    prefix.install "pig-#{version}-withouthadoop.jar"
+    prefix.install ["pig-#{version}.jar", "pig-#{version}-withouthadoop.jar"]
+  end
+
+  def caveats; <<-EOS.undent
+    You may need to set JAVA_HOME:
+      export JAVA_HOME="$(/usr/libexec/java_home)"
+    EOS
   end
 end
 

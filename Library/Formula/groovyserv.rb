@@ -1,30 +1,22 @@
 require 'formula'
 
 class Groovyserv < Formula
-  homepage 'http://kobo.github.com/groovyserv/'
-  url 'https://github.com/downloads/kobo/groovyserv/groovyserv-0.9-src.zip'
-  sha1 '54464608f90a381b44cf7959136e1b1f31a3919c'
-  head 'https://github.com/kobo/groovyserv.git', :using => :git
+  homepage 'http://kobo.github.io/groovyserv/'
+  url 'https://bitbucket.org/kobo/groovyserv-mirror/downloads/groovyserv-0.12-src.zip'
+  sha1 '13d28359d19cdbf380ac45a4c4aeb62af317bd3e'
 
-  depends_on 'gradle' => :build
-  depends_on 'groovy'
+  head 'https://github.com/kobo/groovyserv.git'
 
   def install
-    system 'gradle clean executables'
+    system './gradlew clean executables'
 
     # Install executables in libexec to avoid conflicts
-    Dir::chdir Dir['build/executables/'].first do
-      libexec.install %w{bin lib}
-    end
-    prefix.install %w{LICENSE.txt README.txt NOTICE.txt}
+    libexec.install Dir["build/executables/{bin,lib}"]
 
     # Remove windows files
     rm_f Dir["#{libexec}/bin/*.bat"]
 
     # Symlink binaries
-    bin.mkpath
-    Dir["#{libexec}/bin/*"].each do |f|
-      ln_s f, bin + File.basename(f)
-    end
+    bin.install_symlink Dir["#{libexec}/bin/*"]
   end
 end

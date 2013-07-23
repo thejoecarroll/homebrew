@@ -1,18 +1,27 @@
 require 'formula'
 
 class Avrdude < Formula
-  url 'http://download.savannah.gnu.org/releases/avrdude/avrdude-5.11.1.tar.gz'
   homepage 'http://savannah.nongnu.org/projects/avrdude/'
-  md5 '3a43e288cb32916703b6945e3f260df9'
+  url 'http://download.savannah.gnu.org/releases/avrdude/avrdude-5.11.1.tar.gz'
+  sha1 '330b3a38d3de6c54d4866819ffb6924ed3728173'
 
-  depends_on 'libusb-compat' if ARGV.include? '--with-usb'
+  head 'svn://svn.savannah.nongnu.org/avrdude/trunk/avrdude/'
 
-  def options
-    [['--with-usb', 'Compile AVRDUDE with USB support.']]
+  option 'with-usb', 'Compile AVRDUDE with USB support.'
+
+  depends_on 'libusb-compat' if build.include? 'with-usb'
+  depends_on 'libftdi' => :optional
+
+  if build.head?
+    depends_on :autoconf
+    depends_on :automake
+    depends_on :libtool
   end
 
   def install
-    system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
+    system "./bootstrap" if build.head?
+    system "./configure", "--disable-dependency-tracking",
+                          "--prefix=#{prefix}"
     system "make"
     system "make install"
   end

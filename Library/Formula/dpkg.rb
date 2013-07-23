@@ -1,13 +1,19 @@
 require 'formula'
 
 class Dpkg < Formula
-  url 'http://ftp.debian.org/debian/pool/main/d/dpkg/dpkg_1.15.8.11.tar.bz2'
   homepage 'http://en.wikipedia.org/wiki/Dpkg'
-  md5 '58a1a3ab86ab3220e469cb75f6fb6d7c'
+  url 'http://ftp.debian.org/debian/pool/main/d/dpkg/dpkg_1.15.8.13.tar.bz2'
+  sha1 'd0b9386742f966345a23c3daa0391b37fa837a3f'
 
   depends_on 'pkg-config' => :build
+  depends_on 'gnu-tar'
 
-  #Fixes the PERL_LIBDIR
+  fails_with :clang do
+    cause 'cstdlib:142:3: error: declaration conflicts with target of using declaration already in scope'
+  end
+
+  # Fixes the PERL_LIBDIR.
+  # Uses Homebrew-install gnu-tar instead of bsd tar.
   def patches; DATA; end
 
   def install
@@ -19,6 +25,12 @@ class Dpkg < Formula
                           "--without-start-stop-daemon"
     system "make"
     system "make install"
+  end
+
+  def caveats; <<-EOS.undent
+    This installation of dpkg is not configured to install software, so
+    commands such as `dpkg -i`, `dpkg --configure` will fail.
+    EOS
   end
 end
 
@@ -40,3 +52,16 @@ index a4e8516..de7f226 100755
  
  for ac_prog in pod2man
  do
+diff --git a/lib/dpkg/dpkg.h b/lib/dpkg/dpkg.h
+index ba6066c..89a66ba 100644
+--- a/lib/dpkg/dpkg.h
++++ b/lib/dpkg/dpkg.h
+@@ -97,7 +97,7 @@
+ #define DPKG  	"dpkg"
+ #define DEBSIGVERIFY	"/usr/bin/debsig-verify"
+ 
+-#define TAR		"tar"
++#define TAR		"gnutar"
+ #define RM		"rm"
+ #define FIND		"find"
+ #define DIFF		"diff"

@@ -1,10 +1,11 @@
 require 'formula'
 
 class Fossil < Formula
-  version '1.20'
-  url 'http://www.fossil-scm.org/download/fossil-src-20111021125253.tar.gz'
-  md5 'd3bd7d3bf60b523578f37315cd8a8f12'
   homepage 'http://www.fossil-scm.org/'
+  url 'http://www.fossil-scm.org/download/fossil-src-20130618210923.tar.gz'
+  sha1 'b8de07de92483ba491c7e11c1d82147bce1cdaf9'
+  version '1.26'
+
   head 'fossil://http://www.fossil-scm.org/'
 
   def install

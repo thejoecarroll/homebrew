@@ -1,15 +1,22 @@
 require 'formula'
 
 class Qpdf < Formula
-  url 'http://downloads.sourceforge.net/project/qpdf/qpdf/2.3.0/qpdf-2.3.0.tar.gz'
   homepage 'http://qpdf.sourceforge.net/'
-  md5 'af6d60984055e6a2c988d53c55b1a7ca'
+  url 'http://downloads.sourceforge.net/project/qpdf/qpdf/5.0.0/qpdf-5.0.0.tar.gz'
+  sha1 'b2d15a1499ed98430a6248d4d8960f43474b8948'
 
   depends_on 'pcre'
 
   def install
+    # find Homebrew's libpcre
+    ENV.append 'LDFLAGS', "-L#{HOMEBREW_PREFIX}/lib"
+
     system "./configure", "--prefix=#{prefix}"
     system "make"
     system "make install"
+  end
+
+  test do
+    system "#{bin}/qpdf", "--version"
   end
 end

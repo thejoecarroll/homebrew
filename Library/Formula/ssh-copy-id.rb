@@ -1,10 +1,11 @@
 require 'formula'
 
 class SshCopyId < Formula
-  url 'http://ftp.lambdaserver.com/pub/OpenBSD/OpenSSH/portable/openssh-5.9p1.tar.gz'
-  version '5.9p1'
   homepage 'http://openssh.org/'
-  sha1 'ac4e0055421e9543f0af5da607a72cf5922dcc56'
+  url 'http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-6.2p2.tar.gz'
+  mirror 'http://ftp.spline.de/pub/OpenBSD/OpenSSH/portable/openssh-6.2p2.tar.gz'
+  version '6.2p2'
+  sha256 '7f29b9d2ad672ae0f9e1dcbff871fc5c2e60a194e90c766432e32161b842313b'
 
   def install
     bin.install 'contrib/ssh-copy-id'
